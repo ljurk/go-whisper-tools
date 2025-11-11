@@ -1,0 +1,44 @@
+---
+name: go
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract Go version
+        id: version
+        run: echo GO_VERSION=$(awk '$1 == "go" {print $2}' go.mod) >> $GITHUB_OUTPUT
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ steps.version.outputs.GO_VERSION }}
+
+      - name: Build
+        run: go build -v ./...
+
+  golangci:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract Go version
+        id: version
+        run: echo GO_VERSION=$(awk '$1 == "go" {print $2}' go.mod) >> $GITHUB_OUTPUT
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ steps.version.outputs.GO_VERSION }}
+          cache: false
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v8
+        with:
+          version: latest
