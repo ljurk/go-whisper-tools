@@ -13,12 +13,12 @@ import (
 )
 
 var (
-	file    string
 	infoCmd = &cobra.Command{
-		Use:   "info",
+		Use:   "info [whisper-file]",
+		Args:  cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
 		Short: "dump info about whisper file",
 		Run: func(cmd *cobra.Command, args []string) {
-			path, _ := cmd.Flags().GetString("file")
+			path := args[0]
 			w, err := whisper.Open(path)
 			if err != nil {
 				log.Fatalf("Error opening '%s': %v\n", path, err)
@@ -62,10 +62,5 @@ var (
 )
 
 func init() {
-	infoCmd.Flags().StringVar(&file, "file", "", "path to whisper file")
-	err := infoCmd.MarkFlagRequired("file")
-	if err != nil {
-		fmt.Println(err)
-	}
 	rootCmd.AddCommand(infoCmd)
 }
