@@ -13,6 +13,18 @@ type SchemaCount struct {
 	Count      int
 }
 
+func CompareSpecsEqual(a, b []ArchiveSpec) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i].SecondsPerPoint != b[i].SecondsPerPoint || a[i].RetentionSecs != b[i].RetentionSecs {
+			return false
+		}
+	}
+	return true
+}
+
 func CountDefinitions(schemas []Schema, whisperDir string, files []string) ([]SchemaCount, error) {
 	// create count list
 	counts := make([]SchemaCount, 0, len(schemas))
