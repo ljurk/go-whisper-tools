@@ -45,7 +45,7 @@ func (spec ArchiveSpec) toHuman() string {
 }
 
 func FormatRetentionList(specs []ArchiveSpec) string {
-	parts := make([]string, len(specs))
+	parts := make([]string, 0, len(specs))
 	for _, i := range specs {
 		parts = append(parts, i.toHuman())
 	}
