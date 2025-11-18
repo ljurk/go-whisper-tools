@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"log"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -20,4 +21,7 @@ func Execute() {
 
 func init() {
 	rootCmd.PersistentFlags().BoolP("help", "", false, "help for this command")
+
+	log.SetFlags(0)
+
 }
