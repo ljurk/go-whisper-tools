@@ -107,7 +107,6 @@ var (
 			if err != nil {
 				log.Fatalf("failed to parse schemas %s: %v\n", path, err)
 			}
-			log.Printf("Found %d schema definitions", len(schemas))
 
 			// find all .wsp files under path
 			var files []string
@@ -119,11 +118,16 @@ var (
 				log.Fatalf("no .wsp files found under %s\n", args[0])
 			}
 
-			log.Printf("Found %d whisper files", len(files))
-
+			// output table header
+			wr := tabwriter.NewWriter(os.Stdout, 1, 4, 2, ' ', 0)
+			_, _ = fmt.Fprintln(wr, "count\tname\tpattern")
 			schemaCounts, _ := lib.CountDefinitions(schemas, args[0], files)
 			for _, i := range schemaCounts {
-				fmt.Printf("[%s] %s > %d\n", i.Definition.Name, i.Definition.Pattern, i.Count)
+				fmt.Fprintf(wr, "%d\t%s\t%s\n", i.Count, i.Definition.Name, i.Definition.Pattern)
+			}
+			err = wr.Flush()
+			if err != nil {
+				_, _ = fmt.Fprintln(os.Stderr, "ERROR failed to close TabWriter")
 			}
 		},
 	}
