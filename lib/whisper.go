@@ -27,7 +27,6 @@ func WhisperRetentionsToSpecs(retentions []whisper.Retention) []ArchiveSpec {
 func FindWhisperFiles(root string) ([]string, error) {
 	out := []string{}
 	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
-		fmt.Println(path)
 		if err != nil {
 			// Skip unreadable files/directories
 			fmt.Fprintf(os.Stderr, "Skipping %s: %v\n", path, err)
